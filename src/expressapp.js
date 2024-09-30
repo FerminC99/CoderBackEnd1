@@ -1,4 +1,6 @@
 import express from "express";
+import usersRouter from "./routes/users.router.js";
+import config from './config.js';
 
 const PORT = 5050;
 
@@ -6,10 +8,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get(`/`, (req,res) =>{
-    res.status(200).send ({error: null, data:`Buenas, Todo va Ok`});
-});
+app.use('/api/users', usersRouter);
 
-app.listen (PORT, () => {
-    console.log (`Server Activo en puerto ${PORT}`);
+app.use('/static', express.static(`${config.DIRNAME}/public`));
+
+app.listen(config.PORT, () => {
+    console.log(`Server activo en puerto ${config.PORT}`);
 });
