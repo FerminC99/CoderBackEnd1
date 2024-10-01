@@ -1,19 +1,11 @@
-import { UserManager } from "./UserManager.js";
+import express from "express";
+import productRouter from './routes/products.router.js'
 
-const manager1 = new UserManager('./users_manager.json');
+const PORT = "8080";
 
-await manager1.init(); 
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(productRouter)
 
-await manager1.createUser({
-    firstName: 'Fermin',
-    lastName: 'Corredera',
-    age: '99',
-    course: 'BackEnd',
-})
-console.log (await manager1.getUsers());
-
-
-
-
-
-
+app.listen(PORT)
