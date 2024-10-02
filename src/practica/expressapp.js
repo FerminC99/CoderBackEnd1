@@ -1,6 +1,6 @@
 import express from "express";
 import usersRouter from "./routes/users.router.js";
-import config from './config.js';
+import config from '../config.js';
 
 const PORT = 5050;
 
