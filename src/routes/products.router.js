@@ -1,5 +1,6 @@
 import { Router } from "express";
 import fs from 'fs';
+import { socketServer } from '../app.js';
 
 const router = Router();
 
@@ -52,6 +53,7 @@ router.post('/products', async (req, res) => {
         req.body.id = maxId+1
         products.push(req.body); 
         await fs.promises.writeFile("src/files/products.json", JSON.stringify(products));
+        socketServer.emit('productUpdate', products);
         res.status(200).send({ error: null, data: products});
     }
         else {
@@ -85,12 +87,35 @@ router.delete('/products/:pid',async (req, res) => {
     if (index > -1) {
         products.splice(index, 1);
         await fs.promises.writeFile("src/files/products.json", JSON.stringify (products))
+        socketServer.emit('productUpdate', products);
         res.status(200).send({ error: null, data: 'Producto eliminado' });
     } else {
         res.status(404).send({ error: 'No se encuentro el producto', data: [] });
     }
 });
 
+
+router.get('/home', async (req, res) => {
+    try {
+        const content = await fs.promises.readFile("src/files/products.json", "utf-8");
+        const products = JSON.parse(content);
+        res.render('home', { products });  
+    } catch (error) {
+        console.error("Error al cargar productos:", error.message);
+        res.status(400).send({ error: 'Error al cargar la página de productos' });
+    }
+});
+
+router.get('/realtimeproducts', async (req, res) => {
+    try {
+        const content = await fs.promises.readFile("src/files/products.json", "utf-8");
+        const products = JSON.parse(content);
+        res.render('realTimeProducts', { products });
+    } catch (error) {
+        console.error("Error al cargar productos:", error.message);
+        res.status(400).send("Error al cargar la página de productos en tiempo real.");
+    }
+});
 
 export default router;
 

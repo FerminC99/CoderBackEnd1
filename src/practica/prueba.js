@@ -1,77 +1,56 @@
-router.post('/:cid/product/:pid', async (req, res) => {
-    const cid = parseInt(req.params.cid);
-    const pid = parseInt(req.params.pid);
-    
-    try {
-        let productsData = await fs.promises.readFile('src/files/products.json', 'utf8');
-        let products = productsData ? JSON.parse(productsData) : [];
+import express from "express";
+import handlebars from 'express-handlebars';
+import { Server } from "socket.io";
+import productRouter from './routes/products.router.js'
+import cartRouter from './routes/cart.routes.js'
+import config from './config.js';
+import fs from 'fs';
 
-        let cartsData = await fs.promises.readFile('src/files/cart.json', 'utf8');
-        let carts = cartsData ? JSON.parse(cartsData) : [];
-        const productIndex = products.findIndex((product) => product.id === pid);
-        const cartIndex = carts.findIndex((cart) => cart.id === cid);
-        if (cartIndex > -1) {
-            if (productIndex > -1) {
-                let cartProducts = carts[cartIndex].products;
-                const productIndexCart = cartProducts.findIndex((product) => product.productId === pid);
-                if (productIndexCart > -1) {
-                    cartProducts[productIndexCart].quantity++;
-                } else {
-                    cartProducts.push({ productId: pid, quantity: 1 });
-                }
-                carts[cartIndex].products = cartProducts;
-            } else {
-                return res.status(400).send({ error: "El producto no existe" });
-            }
-        } else {
-            if (productIndex > -1) {
-                carts.push({
-                    id: cid,
-                    products: [{ productId: pid, quantity: 1 }]
-                });
-            } else {
-                return res.status(400).send({ error: "El producto no existe" });
-            }
-        }
-        await fs.promises.writeFile('src/files/cart.json', JSON.stringify(carts));  
-        res.status(200).send({ message: "Producto añadido al carrito" });
-    } catch (e) {
-        res.status(400).send({ error: e.message });
+
+
+const app = express();
+
+ export const httpServer =  app.listen(config.PORT, () => {
+    console.log(`Server activo en puerto ${config.PORT}`);
+});
+
+export const socketServer = new Server (httpServer);
+socketServer.on ('connection', (socket) =>{
+    console.log('Nuevo Cliente Conectado')
+
+
+const updateProducts = async () => {
+    const content = await fs.promises.readFile("src/files/products.json", "utf-8");
+    const products = JSON.parse(content);
+    socketServer.emit('productUpdate', products);
+};
+
+updateProducts();
+socket.on('updateProductList', async () => {
+    await updateProducts();
+    });
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.engine('handlebars', handlebars.engine());
+app.set('views', `${config.DIRNAME}/views`);
+app.set('view engine', 'handlebars');
+
+app.use(productRouter)
+app.use (cartRouter)
+
+app.use('/static', express.static(`${config.DIRNAME}/public`));
+
+app.get('/', async (req, res) => {
+    try {
+        const content = await fs.promises.readFile("src/files/products.json", "utf-8");
+        const products = JSON.parse(content);
+        res.render('home', { products });  
+    } catch (error) {
+        console.error("Error al cargar productos:", error.message);
+        res.status(500).send("Error al cargar la página de productos.");
     }
 });
 
-
-
-router.post('/:cid/product/:pid', async (req, res) => {
-    const cid = parseInt(req.params.cid);
-    const pid = parseInt(req.params.pid);
-    
-    try {
-        let products = await fs.promises.readFile('src/files/products.json', 'utf8');
-        products = JSON.parse(products);
-        
-        let carts = await fs.promises.readFile('src/files/cart.json', 'utf8'); 
-        carts = JSON.parse(carts);
-    
-        const productIndex = products.findIndex((product) => product.id === pid);
-        const cartIndex = carts.findIndex((cart) => cart.id === cid);
-    
-        if (cartIndex > -1) {
-            if (productIndex > -1) {
-                let cartProducts = carts[cartIndex].products;
-                const productIndexCart = cartProducts.findIndex((product) => product.productId === pid);
-                if (productIndexCart > -1) {
-                    cartProducts[productIndexCart].quantity++;
-                } else {
-                    cartProducts.push({ productId: pid, quantity: 1 });
-                }
-                carts[cartIndex].products = cartProducts;
-                await fs.promises.writeFile('src/files/cart.json', JSON.stringify(carts));  
-                res.status(200).send({ message: "OK" });
-            } else {
-                res.status(400).send({ error: "El producto no existe" });}}
-                 else {
-            res.status(400).send({ error: "El carrito no existe" });}} 
-            catch (e) {
-        res.status(400).send({ error: e.message }); }
-});
