@@ -106,6 +106,9 @@ router.get('/home', async (req, res) => {
     }
 });
 
+
+
+
 router.get('/realtimeproducts', async (req, res) => {
     try {
         const content = await fs.promises.readFile("src/files/products.json", "utf-8");

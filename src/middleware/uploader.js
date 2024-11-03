@@ -1,5 +1,5 @@
 import multer from 'multer';
-import config from '../routes/config.js';
+import config from '../config';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -13,3 +13,6 @@ const storage = multer.diskStorage({
 });
 
 export const uploader = multer({ storage: storage });
+
+
+

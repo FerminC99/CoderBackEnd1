@@ -1,1 +1,94 @@
-[{"id":1,"title":"Iphone 11","description":"Celular de gama media","code":"A34","price":300,"status":true,"stock":6,"category":"Celulares"},{"id":2,"title":"Iphone 12","description":"Celular de gama media","code":"A44","price":500,"status":true,"stock":12,"category":"Celulares"},{"title":"Iphone 13","description":"Celular de gama media","code":"A54","price":600,"status":true,"stock":35,"category":"Celulares","id":3},{"title":"Iphone 14","description":"Celular de gama alta","code":"A64","price":1000,"status":true,"stock":3,"category":"Celulares","id":4}]
+
+[
+    {
+        "id": 1,
+        "title": "iPhone 11",
+        "description": "Celular de gama media",
+        "code": "A34",
+        "price": 300,
+        "stock": 6,
+        "category": "Celulares"
+    },
+    {
+        "id": 2,
+        "title": "iPhone 12",
+        "description": "Celular de gama media",
+        "code": "A44",
+        "price": 500,
+        "stock": 12,
+        "category": "Celulares"
+    },
+    {
+        "id": 3,
+        "title": "iPhone 13",
+        "description": "Celular de gama media",
+        "code": "A54",
+        "price": 600,
+        "stock": 35,
+        "category": "Celulares"
+    },
+    {
+        "id": 4,
+        "title": "iPhone 14",
+        "description": "Celular de gama alta",
+        "code": "A64",
+        "price": 1000,
+        "stock": 3,
+        "category": "Celulares"
+    },
+    {
+        "id": 5,
+        "title": "iPhone 17",
+        "description": "Celular de gama alta",
+        "code": "A84",
+        "price": 1200,
+        "stock": 25,
+        "category": "Celulares"
+    },
+    {
+            "id": 6,
+            "title": "iPhone 18",
+            "description": "Celular de gama alta",
+            "code": "A94",
+            "price": 1400,
+            "stock": 15,
+            "category": "Celulares"
+        },
+        {
+            "id": 7,
+            "title": "iPhone 19",
+            "description": "Celular de gama alta",
+            "code": "A104",
+            "price": 1600,
+            "stock": 10,
+            "category": "Celulares"
+        },
+        {
+            "id": 8,
+            "title": "iPhone 20",
+            "description": "Celular de gama alta",
+            "code": "A114",
+            "price": 1800,
+            "stock": 5,
+            "category": "Celulares"
+        },
+        {
+            "id": 9,
+            "title": "iPhone 21",
+            "description": "Celular de gama alta",
+            "code": "A124",
+            "price": 2000,
+            "stock": 2,
+            "category": "Celulares"
+        },
+        {
+            "id": 10,
+            "title": "iPhone 22",
+            "description": "Celular de gama alta",
+            "code": "A134",
+            "price": 2200,
+            "stock": 1,
+            "category": "Celulares"
+        }
+    
+]

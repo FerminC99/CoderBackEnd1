@@ -1,30 +1,43 @@
-
 import express from "express";
 import handlebars from 'express-handlebars';
 import { Server } from "socket.io";
-import productRouter from './routes/products.router.js';
-import cartRouter from './routes/cart.routes.js';
 import config from './config.js';
 import fs from 'fs';
+import mongoose from 'mongoose';
+import cartRoutes from './routes/routes.cart.js';
+import productsRoutes from './routes/routes.products.js';
 
 const app = express();
 
-export const httpServer = app.listen(config.PORT, () => {
-    console.log(`Server activo en puerto ${config.PORT}`);
-});
+const startServer = async () => {
+    try {
+        await mongoose.connect(config.MONGODB_URI);
+        const httpServer = app.listen(config.PORT, () => {
+            console.log(`Servidor escuchando en el puerto ${config.PORT}`);
+        });
 
-export const socketServer = new Server(httpServer);
-socketServer.on('connection', (socket) => {
-    console.log('Nuevo Cliente Conectado');
+        const socketServer = new Server(httpServer);
+        socketServer.on('connection', (socket) => {
+            console.log('Nuevo Cliente Conectado');
 
-    const updateProducts = async () => {
-        const content = await fs.promises.readFile("src/files/products.json", "utf-8");
-        const products = JSON.parse(content);
-        socketServer.emit('productUpdate', products);  
-    };
+            const updateProducts = async () => {
+                try {
+                    const content = await fs.promises.readFile("src/files/products.json", "utf-8");
+                    const products = JSON.parse(content);
+                    socket.emit('productUpdate', products);  // Emitir solo al cliente conectado
+                } catch (error) {
+                    console.error("Error al leer productos:", error.message);
+                }
+            };
 
-    updateProducts();
-});
+            updateProducts();
+        });
+    } catch (error) {
+        console.error("Error al conectar a MongoDB:", error.message);
+    }
+};
+
+startServer();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,8 +46,8 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', `${config.DIRNAME}/views`);
 app.set('view engine', 'handlebars');
 
-app.use(productRouter)
-app.use (cartRouter)
+app.use('/api/db/products', productsRoutes);
+app.use('/api/db/cart', cartRoutes);
 
 app.use('/static', express.static(`${config.DIRNAME}/public`));
 
