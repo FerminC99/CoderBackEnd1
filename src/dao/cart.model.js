@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import productModel from './products.model.js';
+import productModel from './product.model.js';
 
 mongoose.pluralize(null);
 
@@ -22,4 +22,4 @@ schema.pre('findOne', function () {
 
 const model = mongoose.model(collection, schema);
 
-export default CartModel;
+export default model;
