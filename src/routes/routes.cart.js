@@ -44,15 +44,15 @@ router.get('/one/:cid', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { _user_id, products } = req.body;
+    const { content, products } = req.body;
 
  
-    if (!_user_id) {
-        return res.status(400).send({ error: 'Se requiere el ID del usuario.' });
+    if (!content) {
+        return res.status(400).send({ error: 'Se requiere el ID .' });
     }
 
     try {
-        const process = await cartManager.createCart(_user_id, products);
+        const process = await cartManager.createCart(content, products);
         res.status(process.status).send({ payload: process.payload, error: process.error });
     } catch (error) {
         console.error("Error al crear el carrito:", error);
