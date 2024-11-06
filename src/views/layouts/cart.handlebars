@@ -1,0 +1,26 @@
+<div>
+    <h1>Carrito de Compras</h1>
+    <p>Productos:</p>
+    <div>
+        {{#each cart.products}}
+        <div>
+            <div>
+                <h5>{{this.title}}</h5>
+                <p>Precio unitario: ${{this.price}}</p>
+                <p>Cantidad: {{this.qty}}</p>
+                <p>Precio total: ${{multiply this.price this.qty}}</p>
+                <p>Categoría: {{this.category}}</p>
+                <button onclick="updateQuantity('{{this._id}}', 'increase')">+</button>
+                <button onclick="updateQuantity('{{this._id}}', 'decrease')">-</button>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <p><strong>Total del carrito: ${{cart.totalPrice}}</strong></p>
+</div>
+
+<script>
+   // function updateQuantity(productId, action) {
+      //  console.log(`Update ${action} for product ${productId}`);
+   // }
+</script>

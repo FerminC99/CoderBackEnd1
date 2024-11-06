@@ -9,53 +9,77 @@
     <h1>Lista de Productos en Tiempo Real</h1>
     <ul id="product-list">
         {{#each products}}
-            <li id="product-{{_id}}">
+            <li id="product-{{id}}">
                 <h2>{{title}}</h2>
                 <p>{{description}}</p>
                 <p>Precio: ${{price}}</p>
                 <p>Stock: {{stock}}</p>
-                <p>Categoría: {{category}}</p>
-                <button onclick="addToCart('{{_id}}')">Agregar al carrito</button>
             </li>
         {{/each}}
     </ul>
 
+     <h1>Listado de productos</h1>
+    <div>
+        {{#each products}}
+        <div>
+            <div>
+                <div>
+                    <h6 >Nombre del producto: {{title}}</h6>
+                    <p >ID del producto: {{_id}}</p>
+                    <p >Precio del producto: {{price}}</p>
+                    <p >Descripción del producto: {{description}}</p>
+                    <p >Stock disponible: {{stock}}</p>
+                    <p >Categoría: {{category}}</p>
+                    <button>Agregar al carrito</button>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
     <div id="pagination">
         {{#if showPrev}}
-        <a href="/realtimeproducts?page={{prevPage}}" >Anterior</a>
+        <a href="/realtimeproducts?page={{prevPage}}" class="btn btn-primary">Anterior</a>
         {{/if}}
         <span>Página {{currentPage}} de {{totalPages}}</span>
         {{#if showNext}}
-        <a href="/realtimeproducts?page={{nextPage}}" >Siguiente</a>
+        <a href="/realtimeproducts?page={{nextPage}}" class="btn btn-primary">Siguiente</a>
         {{/if}}
     </div>
+</div>
+<div>
+    <div>
+        <!-- Lista de productos -->
+        <div>
+            <h1>Listado de productos</h1>
+            <ul id="productsList">
+                {{#each products}}
+                <li>
+                    <span>{{this.title}} ($ {{this.price}})</span>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
+
+        
         socket.on('productUpdate', products => {
             const productList = document.getElementById('product-list');
             productList.innerHTML = ''; 
 
             products.forEach(product => {
                 const listItem = document.createElement('li');
-                listItem.id = `product-${product._id}`;
                 listItem.innerHTML = `
                     <h2>${product.title}</h2>
                     <p>${product.description}</p>
                     <p>Precio: $${product.price}</p>
                     <p>Stock: ${product.stock}</p>
-                    <p>Categoría: ${product.category}</p>
-                    <button onclick="addToCart('${product._id}')">Agregar al carrito</button>
                 `;
                 productList.appendChild(listItem);
             });
         });
-
-        function addToCart(productId) {
-            console.log(`Producto ${productId} agregado al carrito.`);
-            
-        }
     </script>
 </body>
 </html>
