@@ -24,7 +24,7 @@ const startServer = async () => {
                 try {
                     const content = await fs.promises.readFile("src/files/products.json", "utf-8");
                     const products = JSON.parse(content);
-                    socket.emit('productUpdate', products);  // Emitir solo al cliente conectado
+                    socket.emit('productUpdate', products);  
                 } catch (error) {
                     console.error("Error al leer productos:", error.message);
                 }
